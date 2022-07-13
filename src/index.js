@@ -1,20 +1,21 @@
-import { runtimeConfig } from "@plone/volto/runtime_config";
+import { runtimeConfig } from '@plone/volto/runtime_config';
+import StagingBanner from './StagingBanner';
 
 const applyConfig = (config) => {
   // #137187 Keycloak integration
-  if (runtimeConfig["RAZZLE_KEYCLOAK"] === "Yes") {
+  if (runtimeConfig['RAZZLE_KEYCLOAK'] === 'Yes') {
     config.settings.externalRoutes = [
       ...(config.settings.externalRoutes || []),
       {
         match: {
-          path: "/login",
+          path: '/login',
           exact: true,
           strict: false,
         },
       },
       {
         match: {
-          path: "/logout",
+          path: '/logout',
           exact: true,
           strict: false,
         },
@@ -25,7 +26,7 @@ const applyConfig = (config) => {
   config.settings.appExtras = [
     ...config.settings.appExtras,
     {
-      match: "",
+      match: '',
       component: StagingBanner,
     },
   ];

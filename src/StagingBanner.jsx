@@ -1,18 +1,18 @@
-import React from "react";
-import { connect } from "react-redux";
-import { Portal } from "react-portal";
-import cx from "classnames";
-import { Message, Container } from "semantic-ui-react";
-import config from "@plone/volto/registry";
-import { Icon } from "@plone/volto/components";
-import { BodyClass } from "@plone/volto/helpers";
+import React from 'react';
+import { connect } from 'react-redux';
+import { Portal } from 'react-portal';
+import cx from 'classnames';
+import { Message, Container } from 'semantic-ui-react';
+import config from '@plone/volto/registry';
+import { Icon } from '@plone/volto/components';
+import { BodyClass } from '@plone/volto/helpers';
 
-import "@eeacms/volto-banner/less/stagingBanner.less";
+import '@eeacms/volto-banner/less/stagingBanner.less';
 
 const staticBanner = {
-  type: "warning",
-  title: "Title",
-  message: "Message",
+  type: 'warning',
+  title: 'Title',
+  message: 'Message',
 };
 
 const StagingBanner = ({ banner = {} }) => {
@@ -21,7 +21,7 @@ const StagingBanner = ({ banner = {} }) => {
     ...(banner.config || {}),
   };
 
-  const [node, setNode] = React.useState("");
+  const [node, setNode] = React.useState('');
   const [staticBannerVisible, setStaticBannerVisible] = React.useState(true);
 
   const hideStaticBanner = React.useCallback(() => {
@@ -32,13 +32,13 @@ const StagingBanner = ({ banner = {} }) => {
     setNode(document.querySelector(bannerConfig.parentNodeSelector));
   }, [bannerConfig.parentNodeSelector]);
 
-  if (!node || bannerConfig.static_banner?.enabled) return "";
+  if (!node || bannerConfig.static_banner?.enabled) return '';
 
   return (
     <Portal node={node}>
       {staticBannerVisible && (
         <Message
-          className={cx("stagingBanner static-banner", staticBanner.type)}
+          className={cx('stagingBanner static-banner', staticBanner.type)}
           icon
         >
           <BodyClass className="has-banner" />
@@ -55,14 +55,14 @@ const StagingBanner = ({ banner = {} }) => {
               {bannerConfig.bannerIcon && (
                 <Icon
                   name={bannerConfig.bannerIcon}
-                  color={bannerConfig.bannerIconColor || "black"}
+                  color={bannerConfig.bannerIconColor || 'black'}
                   size="32px"
                 />
               )}
               {bannerConfig.bannerCloseIcon && (
                 <Icon
                   name={bannerConfig.bannerCloseIcon}
-                  color={bannerConfig.bannerCloseIconColor || "black"}
+                  color={bannerConfig.bannerCloseIconColor || 'black'}
                   className="close-button"
                   size="32px"
                   onClick={hideStaticBanner}
