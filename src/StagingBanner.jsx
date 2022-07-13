@@ -1,0 +1,77 @@
+import React from "react";
+import { Portal } from "react-portal";
+import cx from "classnames";
+import { Message, Container } from "semantic-ui-react";
+import config from "@plone/volto/registry";
+import { Icon } from "@plone/volto/components";
+import { BodyClass } from "@plone/volto/helpers";
+
+import "@eeacms/volto-circularity-policy/less/staging-banner.less";
+
+const staticBanner = {
+  type: "warning",
+  title: "Title",
+  message: "Message",
+};
+
+const StagingBanner = () => {
+  const bannerConfig = {
+    ...(config.settings.stagingBanner || {}),
+  };
+
+  const [node, setNode] = React.useState("");
+  const [staticBannerVisible, setStaticBannerVisible] = React.useState(true);
+
+  const hideStaticBanner = React.useCallback(() => {
+    setStaticBannerVisible(false);
+  }, [setStaticBannerVisible]);
+
+  React.useEffect(() => {
+    setNode(document.querySelector(bannerConfig.parentNodeSelector));
+  }, [bannerConfig.parentNodeSelector]);
+
+  if (!node) return "";
+
+  return (
+    <Portal node={node}>
+      {staticBannerVisible && (
+        <Message
+          className={cx("stagingBanner static-banner", staticBanner.type)}
+          icon
+        >
+          <BodyClass className="has-banner" />
+          <Container>
+            <Message.Content>
+              <Message.Header>{staticBanner.title}</Message.Header>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: staticBanner.message,
+                }}
+              />
+            </Message.Content>
+            <div>
+              {bannerConfig.bannerIcon && (
+                <Icon
+                  name={bannerConfig.bannerIcon}
+                  color={bannerConfig.bannerIconColor || "black"}
+                  size="32px"
+                />
+              )}
+              {bannerConfig.bannerCloseIcon && (
+                <Icon
+                  name={bannerConfig.bannerCloseIcon}
+                  color={bannerConfig.bannerCloseIconColor || "black"}
+                  className="close-button"
+                  size="32px"
+                  onClick={hideStaticBanner}
+                />
+              )}
+            </div>
+          </Container>
+        </Message>
+      )}
+    </Portal>
+  );
+};
+
+export default StagingBanner;
