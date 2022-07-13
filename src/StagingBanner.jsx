@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Portal } from "react-portal";
 import cx from "classnames";
 import { Message, Container } from "semantic-ui-react";
@@ -6,7 +7,7 @@ import config from "@plone/volto/registry";
 import { Icon } from "@plone/volto/components";
 import { BodyClass } from "@plone/volto/helpers";
 
-import "@eeacms/volto-circularity-policy/less/staging-banner.less";
+import "@eeacms/volto-banner/less/stagingBanner.less";
 
 const staticBanner = {
   type: "warning",
@@ -14,9 +15,10 @@ const staticBanner = {
   message: "Message",
 };
 
-const StagingBanner = () => {
+const StagingBanner = ({ banner = {} }) => {
   const bannerConfig = {
     ...(config.settings.stagingBanner || {}),
+    ...(banner.config || {}),
   };
 
   const [node, setNode] = React.useState("");
@@ -30,7 +32,7 @@ const StagingBanner = () => {
     setNode(document.querySelector(bannerConfig.parentNodeSelector));
   }, [bannerConfig.parentNodeSelector]);
 
-  if (!node) return "";
+  if (!node || bannerConfig.static_banner?.enabled) return "";
 
   return (
     <Portal node={node}>
@@ -74,4 +76,6 @@ const StagingBanner = () => {
   );
 };
 
-export default StagingBanner;
+export default connect((state) => ({
+  banner: state.banner,
+}))(StagingBanner);
