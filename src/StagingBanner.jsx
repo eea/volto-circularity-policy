@@ -11,8 +11,8 @@ import './less/staging-banner.less';
 
 const staticBanner = {
   type: 'warning',
-  title: 'Title',
-  message: 'Message',
+  title: 'Under construction',
+  message: 'Content is being added and is still in draft.',
 };
 
 const StagingBanner = ({ banner = {} }) => {
