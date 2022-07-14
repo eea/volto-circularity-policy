@@ -7,7 +7,7 @@ import config from '@plone/volto/registry';
 import { Icon } from '@plone/volto/components';
 import { BodyClass } from '@plone/volto/helpers';
 
-import '@eeacms/volto-banner/less/stagingBanner.less';
+import './less/staging-banner.less';
 
 const staticBanner = {
   type: 'warning',
