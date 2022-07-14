@@ -1,4 +1,5 @@
 import { runtimeConfig } from '@plone/volto/runtime_config';
+import StagingBanner from './StagingBanner';
 
 const applyConfig = (config) => {
   // #137187 Keycloak integration
@@ -21,6 +22,14 @@ const applyConfig = (config) => {
       },
     ];
   }
+  // Volto banner
+  config.settings.appExtras = [
+    ...config.settings.appExtras,
+    {
+      match: '',
+      component: StagingBanner,
+    },
+  ];
 
   return config;
 };

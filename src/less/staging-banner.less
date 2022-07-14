@@ -1,0 +1,41 @@
+@type: 'extra';
+@element: 'custom';
+
+@import (multiple, reference, optional) '../../theme.config';
+
+@bannerTextColor: @textColor;
+@bannerTextOpacity: 0.85;
+@overrideSkipLinks: true;
+
+.stagingBanner {
+  > .ui.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .icon {
+      margin-left: 1rem;
+    }
+  }
+
+  li,
+  p {
+    color: @bannerTextColor;
+    opacity: @bannerTextOpacity;
+  }
+  margin-top: 0 !important;
+
+  .close-button {
+    cursor: pointer;
+  }
+}
+
+.skiplinks-wrapper when (@overrideSkipLinks = true) {
+  position: relative !important;
+  top: 0 !important;
+
+  a.skiplink {
+    position: absolute !important;
+    top: -100px !important;
+  }
+}
