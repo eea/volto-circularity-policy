@@ -4,23 +4,17 @@
  */
 
 import React from 'react';
-import { Dropdown, Image, Segment, Container } from 'semantic-ui-react';
+import { Dropdown, Image } from 'semantic-ui-react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 
 import { withRouter } from 'react-router-dom';
-import { UniversalLink, Navigation } from '@plone/volto/components';
-import {
-  getBaseUrl,
-  hasApiExpander,
-  flattenToAppURL,
-} from '@plone/volto/helpers';
+import { UniversalLink } from '@plone/volto/components';
+import { getBaseUrl, hasApiExpander } from '@plone/volto/helpers';
 import { getNavigation } from '@plone/volto/actions';
 import { Header, Logo } from '@eeacms/volto-eea-design-system/ui';
 import { usePrevious } from '@eeacms/volto-eea-design-system/helpers';
-import { find } from 'lodash';
 import WhiteLogoImage from '@eeacms/volto-eea-design-system/../theme/themes/eea/assets/logo/eea-white.svg';
 import LogoImage from '@eeacms/volto-eea-design-system/../theme/themes/eea/assets/images/Header/eea-logo.svg';
-import globeIcon from '@eeacms/volto-eea-design-system/../theme/themes/eea/assets/images/Header/global-line.svg';
 import eeaFlag from '@eeacms/volto-eea-design-system/../theme/themes/eea/assets/images/Header/eea.png';
 
 import config from '@plone/volto/registry';
@@ -33,8 +27,6 @@ import cx from 'classnames';
  * EEA Specific Header component.
  */
 const EEAHeader = ({ pathname, token, items, history }) => {
-  const currentLang = useSelector((state) => state.intl.locale);
-
   const router_pathname = useSelector((state) => {
     return state.router?.location?.pathname || '';
   });
