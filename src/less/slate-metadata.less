@@ -1,3 +1,5 @@
+// Unsetting the slate-metadata styles coming from eea-design system
+
 .title.metadata.mention,
 .description.metadata.mention,
 .datetime.metadata.mention,
@@ -7,5 +9,13 @@
 .publisher.metadata.mention,
 .rights.metadata.mention,
 .topics.text.metadata.mention {
-  all: unset;
+  all: unset !important;
+}
+//TODO: move these to eea-design system
+.accordion .content .list {
+  .content,
+  .description {
+    all: unset !important;
+    font-weight: normal !important;
+  }
 }
