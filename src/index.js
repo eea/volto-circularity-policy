@@ -89,6 +89,21 @@ const applyConfig = (config) => {
     blockHasOwnFocusManagement: true,
   };
 
+  //remove data-blocks
+  config.blocks.groupBlocksOrder = [
+    ...(config.blocks.groupBlocksOrder || []).filter(
+      (blocks_section) => blocks_section.id !== 'data_blocks',
+    ),
+  ];
+
+  //remove treemap plotly block
+  config.blocks.blocksConfig.treemapChart.restricted = true;
+
+  //remove plotly block
+  config.blocks.blocksConfig.plotly_chart.restricted = true;
+
+  config.blocks.blocksConfig.connected_plotly_chart.restricted = true;
+
   return config;
 };
 
