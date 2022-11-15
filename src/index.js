@@ -38,6 +38,21 @@ const applyConfig = (config) => {
     },
   ];
 
+  config.settings.eea.headerSearchBox = [
+    {
+      isDefault: true,
+      path: '/advanced-search',
+      placeholder: 'Search...',
+    },
+    {
+      path: '/datahub',
+      placeholder: 'Search Datahub...',
+      description:
+        'Looking for more information? Try searching the full EEA website content',
+      buttonTitle: 'Go to full site search',
+    },
+  ];
+
   return config;
 };
 
