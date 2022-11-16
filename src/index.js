@@ -97,12 +97,15 @@ const applyConfig = (config) => {
   ];
 
   //remove treemap plotly block
-  config.blocks.blocksConfig.treemapChart.restricted = true;
+  if (config.blocks.blocksConfig.treemapChart)
+    config.blocks.blocksConfig.treemapChart.restricted = true;
 
   //remove plotly block
-  config.blocks.blocksConfig.plotly_chart.restricted = true;
+  if (config.blocks.blocksConfig.plotly_chart)
+    config.blocks.blocksConfig.plotly_chart.restricted = true;
 
-  config.blocks.blocksConfig.connected_plotly_chart.restricted = true;
+  if (config.blocks.blocksConfig.connected_plotly_chart)
+    config.blocks.blocksConfig.connected_plotly_chart.restricted = true;
 
   return config;
 };
