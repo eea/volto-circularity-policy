@@ -107,6 +107,12 @@ const applyConfig = (config) => {
   if (config.blocks.blocksConfig.connected_plotly_chart)
     config.blocks.blocksConfig.connected_plotly_chart.restricted = true;
 
+  config.settings.integratesBlockStyles = [
+    ...(config.settings.integratesBlockStyles.filter(
+      (blocks) => blocks !== 'slate',
+    ) || []),
+  ];
+
   return config;
 };
 
