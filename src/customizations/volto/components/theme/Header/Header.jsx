@@ -9,12 +9,16 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 
 import { withRouter } from 'react-router-dom';
 import { UniversalLink } from '@plone/volto/components';
-import { getBaseUrl, hasApiExpander } from '@plone/volto/helpers';
+import {
+  getBaseUrl,
+  hasApiExpander,
+  flattenToAppURL,
+} from '@plone/volto/helpers';
 import { getNavigation } from '@plone/volto/actions';
 import { Header, Logo } from '@eeacms/volto-eea-design-system/ui';
 import { usePrevious } from '@eeacms/volto-eea-design-system/helpers';
-import WhiteLogoImage from '@eeacms/volto-eea-design-system/../theme/themes/eea/assets/logo/eea-logo-white.svg';
-import LogoImage from '@eeacms/volto-eea-design-system/../theme/themes/eea/assets/images/Header/eeaIcon.png';
+import { find } from 'lodash';
+import globeIcon from '@eeacms/volto-eea-design-system/../theme/themes/eea/assets/images/Header/global-line.svg';
 import eeaFlag from '@eeacms/volto-eea-design-system/../theme/themes/eea/assets/images/Header/eea.png';
 
 import config from '@plone/volto/registry';
@@ -23,17 +27,30 @@ import { BodyClass } from '@plone/volto/helpers';
 
 import cx from 'classnames';
 
+function removeTrailingSlash(path) {
+  return path.replace(/\/+$/, '');
+}
+
 /**
  * EEA Specific Header component.
  */
-const EEAHeader = ({ pathname, token, items, history }) => {
+const EEAHeader = ({ pathname, token, items, history, subsite }) => {
+  const currentLang = useSelector((state) => state.intl.locale);
+  const translations = useSelector(
+    (state) => state.content.data?.['@components']?.translations?.items,
+  );
+
   const router_pathname = useSelector((state) => {
-    return state.router?.location?.pathname || '';
+    return removeTrailingSlash(state.router?.location?.pathname) || '';
   });
+
+  const isSubsite = subsite?.['@type'] === 'Subsite';
 
   const isHomePageInverse = useSelector((state) => {
     const layout = state.content?.data?.layout;
-    const has_home_layout = layout === 'homepage_inverse_view';
+    const has_home_layout =
+      layout === 'homepage_inverse_view' ||
+      (__CLIENT__ && document.body.classList.contains('homepage-inverse'));
     return (
       has_home_layout &&
       (pathname === router_pathname || router_pathname.endsWith('/edit'))
@@ -42,9 +59,13 @@ const EEAHeader = ({ pathname, token, items, history }) => {
 
   const { eea } = config.settings;
   const headerOpts = eea.headerOpts || {};
+  const { logo, logoWhite } = headerOpts || {};
   const width = useSelector((state) => state.screen?.width);
   const dispatch = useDispatch();
   const previousToken = usePrevious(token);
+  const [language, setLanguage] = React.useState(
+    currentLang || eea.defaultLanguage,
+  );
 
   React.useEffect(() => {
     const { settings } = config;
@@ -71,7 +92,7 @@ const EEAHeader = ({ pathname, token, items, history }) => {
         <Header.TopItem className="official-union">
           <Image src={eeaFlag} alt="eea flag"></Image>
           <Header.TopDropdownMenu
-            text="An official website of the European Union | How do you Know?"
+            text="An official website of the European Union | How do you know?"
             tabletText="EEA information systems"
             mobileText=" "
             icon="chevron down"
@@ -103,54 +124,120 @@ const EEAHeader = ({ pathname, token, items, history }) => {
           </Header.TopDropdownMenu>
         </Header.TopItem>
 
-        <Header.TopItem>
+        {!!headerOpts.partnerLinks && (
+          <Header.TopItem>
+            <Header.TopDropdownMenu
+              id="theme-sites"
+              text={headerOpts.partnerLinks.title}
+              viewportWidth={width}
+            >
+              <div className="wrapper">
+                {headerOpts.partnerLinks.links.map((item, index) => (
+                  <Dropdown.Item key={index}>
+                    <a
+                      href={item.href}
+                      className="site"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {item.title}
+                    </a>
+                  </Dropdown.Item>
+                ))}
+              </div>
+            </Header.TopDropdownMenu>
+          </Header.TopItem>
+        )}
+
+        {config.settings.isMultilingual && (
           <Header.TopDropdownMenu
-            id="theme-sites"
-            text={headerOpts.partnerLinks.title}
+            id="language-switcher"
+            className="item"
+            hasLanguageDropdown={config.settings.supportedLanguages.length > 1}
+            text={`${language.toUpperCase()}`}
+            mobileText={`${language.toUpperCase()}`}
+            icon={
+              <Image src={globeIcon} alt="language dropdown globe icon"></Image>
+            }
             viewportWidth={width}
           >
-            <div className="wrapper">
-              {headerOpts.partnerLinks.links.map((item, index) => (
-                <Dropdown.Item key={index}>
-                  <a
-                    href={item.href}
-                    className="site"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {item.title}
-                  </a>
-                </Dropdown.Item>
+            <ul
+              className="wrapper language-list"
+              role="listbox"
+              aria-label="language switcher"
+            >
+              {eea.languages.map((item, index) => (
+                <Dropdown.Item
+                  as="li"
+                  key={index}
+                  text={
+                    <span>
+                      {item.name}
+                      <span className="country-code">
+                        {item.code.toUpperCase()}
+                      </span>
+                    </span>
+                  }
+                  onClick={() => {
+                    const translation = find(translations, {
+                      language: item.code,
+                    });
+                    const to = translation
+                      ? flattenToAppURL(translation['@id'])
+                      : `/${item.code}`;
+                    setLanguage(item.code);
+                    history.push(to);
+                  }}
+                ></Dropdown.Item>
               ))}
-            </div>
+            </ul>
           </Header.TopDropdownMenu>
-        </Header.TopItem>
+        )}
       </Header.TopHeader>
       <Header.Main
         pathname={pathname}
         inverted={isHomePageInverse ? true : false}
         transparency={isHomePageInverse ? true : false}
         logo={
-          <Logo
-            src={isHomePageInverse ? WhiteLogoImage : LogoImage}
-            title={eea.websiteTitle}
-            alt={eea.organisationName}
-            url={eea.logoTargetUrl}
-          />
+          <div {...(isSubsite ? { className: 'logo-wrapper' } : {})}>
+            <Logo
+              src={isHomePageInverse ? logoWhite : logo}
+              title={eea.websiteTitle}
+              alt={eea.organisationName}
+              url={eea.logoTargetUrl}
+            />
+
+            {!!subsite && subsite.title && (
+              <UniversalLink item={subsite} className="subsite-logo">
+                {subsite.title}
+              </UniversalLink>
+            )}
+          </div>
         }
         menuItems={items}
         renderGlobalMenuItem={(item, { onClick }) => (
           <UniversalLink
-            href={item['@id'] || item.url}
+            href={item.url || '/'}
             title={item.title}
             onClick={(e) => {
               onClick(e, item);
             }}
-            className={cx({
+          >
+            {item.title}
+          </UniversalLink>
+        )}
+        renderMenuItem={(item, options, props) => (
+          <UniversalLink
+            href={item.url || '/'}
+            title={item.title}
+            {...(options || {})}
+            className={cx(options?.className, {
               active: item.url === router_pathname,
             })}
           >
-            {item.title}
+            {props?.iconPosition !== 'right' && props?.children}
+            <span>{item.title}</span>
+            {props?.iconPosition === 'right' && props?.children}
           </UniversalLink>
         )}
       ></Header.Main>
@@ -164,6 +251,7 @@ export default compose(
     (state) => ({
       token: state.userSession.token,
       items: state.navigation.items,
+      subsite: state.content.data?.['@components']?.subsite,
     }),
     { getNavigation },
   ),
