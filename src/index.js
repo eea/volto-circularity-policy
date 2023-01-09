@@ -1,4 +1,3 @@
-import * as eea from '@eeacms/volto-eea-website-theme/config';
 import { runtimeConfig } from '@plone/volto/runtime_config';
 import StagingBanner from './StagingBanner';
 import {
@@ -9,11 +8,6 @@ import worldSVG from '@plone/volto/icons/world.svg';
 import './less/slate-metadata.less';
 
 const applyConfig = (config) => {
-  config.settings.eea = {
-    ...eea,
-    ...(config.settings.eea || {}),
-  };
-
   // #137187 Keycloak integration
   if (runtimeConfig['RAZZLE_KEYCLOAK'] === 'Yes') {
     config.settings.externalRoutes = [

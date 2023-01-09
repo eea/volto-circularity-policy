@@ -17,12 +17,10 @@
     "url": "git@github.com:eea/volto-circularity-policy.git"
   },
   "addons": [
-    "@eeacms/volto-eea-design-system",
-    "@eeacms/volto-eea-website-theme"
+    "@eeacms/volto-eea-design-system"
   ],
   "dependencies": {
-    "@eeacms/volto-eea-design-system": "*",
-    "@eeacms/volto-eea-website-theme": "*"
+    "@eeacms/volto-eea-design-system": "*"
   },
   "devDependencies": {
     "@plone/scripts": "2.0.0",
