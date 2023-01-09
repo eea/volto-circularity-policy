@@ -37,6 +37,8 @@ const applyConfig = (config) => {
     },
   ];
 
+  config.settings.eea = config.settings.eea || {};
+
   config.settings.eea.headerSearchBox = [
     {
       isDefault: true,
